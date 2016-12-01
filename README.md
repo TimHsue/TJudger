@@ -17,7 +17,7 @@ TODO:
 check if you've already install libseccomp-dev;  
 otherwise ``sudo apt-get install libseccomp-dev``  
 ``#include "sandbox.cpp"``  
-**notice: compile with -lseccomp**
+**notice: compile with -lseccomp**  
 use``SandBox xxx;``to create a sandbox;  
 use``RunConfig yyy(...);``to creat a config list;  
 use``RunResult RES;``to creat a result struct;  
