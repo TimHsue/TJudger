@@ -1,10 +1,7 @@
-#include "../src/sandbox.cpp"
+#include "../src/judger.cpp"
 
 int main() {
-	RunConfig RCF(true, true, (char*)"./lll", (char*)"lll.in", (char*)"lll.out", LimitList(1000, 64));
-	RunResult RES;
-	SandBox SB;
-	SB.runner(RCF, RES);
-	printf("time_use = %d, mem_use = %d, return_val = %d judge_error = %d\n" , RES.use_time, RES.use_memory, RES.run_status, RES.judger_error);
+	char* argv[] = {(char*)"-lm", NULL};
+	compile((char*)"C++", (char*)"lll.cpp", argv);
 	return 0;
 }

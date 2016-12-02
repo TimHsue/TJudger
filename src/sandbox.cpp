@@ -9,12 +9,14 @@ LimitList :: LimitList(int tl, int ml) {
 
 
 RunConfig :: RunConfig() {}	
-RunConfig :: RunConfig(bool us, bool il, char* rp, char* ifl, char* ofl, LimitList lims_) {
+RunConfig :: RunConfig(bool ic, bool us, bool il, char* rp, char* ifl, char* ofl, char** ag, LimitList lims_) {
+	is_compilation = ic;
 	use_sandbox = us;
 	is_limited = il;
 	run_program = rp;
 	in_file = ifl;
 	out_file = ofl;
+	argv = ag;
 	lims = lims_;
 }
 
@@ -111,11 +113,11 @@ void SandBox :: runner(const RunConfig &RCFG, RunResult &RES) {
 	pid_t s_pid = vfork();
 	
 	if (s_pid < 0) {
-		REPORTER((char*)"Vfork fail.");
+		REPORTER((char*)"Main vfork fail.");
 		return;
 		
 	} else if (s_pid == 0) {
-		if (freopen(RCFG.in_file, "r", stdin) == NULL) {
+		if ((not RCFG.is_compilation) and freopen(RCFG.in_file, "r", stdin) == NULL) {
 			REPORTER((char*)"Freopen in fail.");
 			return;
 		}
@@ -125,10 +127,17 @@ void SandBox :: runner(const RunConfig &RCFG, RunResult &RES) {
 			return;
 		}
 		
+		if (RCFG.is_compilation and freopen(RCFG.out_file, "w", stderr) == NULL) {
+			REPORTER((char*)"Freopen out fail.");
+			return;
+		}
+		
 		if (RCFG.is_limited) if (load_limit(RCFG)) return;
 		if (RCFG.use_sandbox) if (load_syscal_list(RCFG)) return;
 	
-		execve(RCFG.run_program, NULL, NULL);
+		if (RCFG.is_compilation) execvp(RCFG.run_program, RCFG.argv);
+		else execve(RCFG.run_program, RCFG.argv, NULL);
+		
 		REPORTER((char*)"Execve fail");
 		return;
 		
@@ -143,7 +152,6 @@ void SandBox :: runner(const RunConfig &RCFG, RunResult &RES) {
 			int time_lim = (RCFG.lims.time_lim * 1.3 / 1000) + 1 < TIMETOP ? 
 							(RCFG.lims.time_lim * 1.3 / 1000) + 1 : TIMETOP;
 			sleep(time_lim);
-			REPORTER((char*)"Surveillant wake up\n");
 			kill(s_pid, SIGKILL);
 			exit(0);
 			
@@ -154,8 +162,6 @@ void SandBox :: runner(const RunConfig &RCFG, RunResult &RES) {
 			}
 			
 			kill(surveillant, SIGKILL);
-			
-			REPORTER((char*)"Ummmm... It seems it does run successfully....");
 			
 			RES.run_status = WTERMSIG(status_val);
 			RES.judger_error = 0;

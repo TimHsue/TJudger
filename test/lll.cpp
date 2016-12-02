@@ -1,16 +1,17 @@
-#include <iostream>
-#include <cstdio>
 #include <unistd.h>
-#include <stdlib.h>
-using namespace std;
-
-char tmp[2000] = "adsfasdf";
+#include <stdio.h>
+#include <errno.h>
 
 int main() {
-	FILE* stream;
-	stream = fopen("test.www", "w");
-	fprintf(stream, "%s", tmp);
-	fclose(stream);
-	// printf("222");	
+	char ** argv = new char*[32];
+	char *a = (char *)"1asdf";
+	char b[] = "adsfa";
+	char c[] = "asdfasdf";
+	argv[0] = a;
+	argv[1] = b;
+	argv[2] = c;
+	for (int i = 0; i <= 2; i++) {
+		printf("%s\n", argv[i]);
+	}
 	return 0;
 }

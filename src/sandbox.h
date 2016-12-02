@@ -21,6 +21,7 @@ void REPORTER(char* log_info) {
 	strftime(output_time, sizeof(output_time), "%F %R:%S",localtime(&now_time));
 	fprintf(stream, "[%s] : %s\n", output_time, log_info);
 	fclose(stream);
+	exit(0);
 }
 
 
@@ -28,7 +29,7 @@ const int TIMETOP = 60;
 const long long MEMTOP = 1024 * 1024 * 1024;
 
 
-const int syscal_white_list[32] = {15,
+const int syscal_white_list[32] = {16,
 	SCMP_SYS(close), SCMP_SYS(read),
 	SCMP_SYS(write), SCMP_SYS(tgkill),
 	SCMP_SYS(brk), SCMP_SYS(rt_sigprocmask),
@@ -36,7 +37,7 @@ const int syscal_white_list[32] = {15,
 	SCMP_SYS(mprotect), SCMP_SYS(fstat),
 	SCMP_SYS(arch_prctl), SCMP_SYS(munmap),
 	SCMP_SYS(exit_group), SCMP_SYS(vfork),
-	SCMP_SYS(writev)
+	SCMP_SYS(writev), SCMP_SYS(lseek)
 };
 
 
@@ -52,15 +53,17 @@ public:
 
 class RunConfig {
 public:
+	bool is_compilation;
 	bool use_sandbox;
 	bool is_limited;
 	char* run_program;
 	char* in_file;
 	char* out_file;
+	char** argv;
 	LimitList lims;
 	
 	RunConfig();
-	RunConfig(bool, bool, char*, char*, char*, LimitList);
+	RunConfig(bool, bool, bool, char*, char*, char*, char**, LimitList);
 };
 
 
