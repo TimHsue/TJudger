@@ -4,8 +4,13 @@
 #include <stdlib.h>
 using namespace std;
 
+char tmp[2000] = "adsfasdf";
+
 int main() {
-	fork();
-	printf("I shouldnt be here!");
+	FILE* stream;
+	stream = fopen("test.www", "w");
+	fprintf(stream, "%s", tmp);
+	fclose(stream);
+	// printf("222");	
 	return 0;
 }

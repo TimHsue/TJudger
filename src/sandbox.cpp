@@ -9,13 +9,12 @@ LimitList :: LimitList(int tl, int ml) {
 
 
 RunConfig :: RunConfig() {}	
-RunConfig :: RunConfig(bool us, bool il, char* rp, char* ifl, char* ofl, char* afl, LimitList lims_) {
+RunConfig :: RunConfig(bool us, bool il, char* rp, char* ifl, char* ofl, LimitList lims_) {
 	use_sandbox = us;
 	is_limited = il;
 	run_program = rp;
 	in_file = ifl;
 	out_file = ofl;
-	ans_file = afl;
 	lims = lims_;
 }
 
@@ -24,7 +23,7 @@ RunResult :: RunResult() {}
 RunResult :: RunResult(int ut, int um, int rs, bool je) {
 	use_time = ut;
 	use_memory = um;
-	run_statu = rs;
+	run_status = rs;
 	judger_error = je;
 }
 
@@ -47,6 +46,13 @@ int SandBox :: load_syscal_list(const RunConfig &RCFG) {
 	
 	if (seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(execve), 1, 
 		SCMP_A0(SCMP_CMP_EQ, (scmp_datum_t)RCFG.run_program))) {
+		REPORTER((char*)"Add system call fail.");
+		return -1;
+	}
+	
+	if (seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(open), 2, 
+		SCMP_A0(SCMP_CMP_NE, (scmp_datum_t)""),
+		SCMP_A1(SCMP_CMP_EQ, (scmp_datum_t)(O_RDONLY|O_CLOEXEC)))) {
 		REPORTER((char*)"Add system call fail.");
 		return -1;
 	}
@@ -100,7 +106,7 @@ int SandBox :: load_limit(const RunConfig &RCFG) {
 void SandBox :: runner(const RunConfig &RCFG, RunResult &RES) {
 	RES = RunResult(0, 0, 0, SIGABRT);
 	rusage Ruse;
-	int statu_val;
+	int status_val;
 	
 	pid_t s_pid = vfork();
 	
@@ -139,10 +145,10 @@ void SandBox :: runner(const RunConfig &RCFG, RunResult &RES) {
 			sleep(time_lim);
 			REPORTER((char*)"Surveillant wake up\n");
 			kill(s_pid, SIGKILL);
-			return;
+			exit(0);
 			
 		} else {
-			if (wait4(s_pid, &statu_val, 0, &Ruse) == -1) {
+			if (wait4(s_pid, &status_val, 0, &Ruse) == -1) {
 				REPORTER((char*)"Wait child fail.");
 				return;
 			}
@@ -151,7 +157,7 @@ void SandBox :: runner(const RunConfig &RCFG, RunResult &RES) {
 			
 			REPORTER((char*)"Ummmm... It seems it does run successfully....");
 			
-			RES.run_statu = WTERMSIG(statu_val);
+			RES.run_status = WTERMSIG(status_val);
 			RES.judger_error = 0;
 			RES.use_time += (int)((Ruse.ru_stime.tv_sec + Ruse.ru_utime.tv_sec) * 1000);
 			RES.use_time += (int)((Ruse.ru_stime.tv_usec + Ruse.ru_utime.tv_usec) / 1000);
@@ -162,11 +168,11 @@ void SandBox :: runner(const RunConfig &RCFG, RunResult &RES) {
 
 /*----------------------for test--------------------------
 int main() {
-	RunConfig RCF(true, true, (char*)"./lll", (char*)"lll.in", (char*)"lll.out", (char*)"lll.ans", LimitList(1000, 64));
+	RunConfig RCF(true, true, (char*)"./lll", (char*)"lll.in", (char*)"lll.out", LimitList(1000, 64));
 	RunResult RES;
 	SandBox SB;
 	SB.runner(RCF, RES);
-	printf("time_use = %d, mem_use = %d, return_val = %d judge_error = %d\n" , RES.use_time, RES.use_memory, RES.run_statu, RES.judger_error);
+	printf("time_use = %d, mem_use = %d, return_val = %d judge_error = %d\n" , RES.use_time, RES.use_memory, RES.run_status, RES.judger_error);
 	return 0;
 }
 */

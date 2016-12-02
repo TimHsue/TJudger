@@ -7,8 +7,10 @@
 #include <stdio.h>
 #include <iostream>
 #include <time.h>
+#include <stdlib.h>
 #include <sys/wait.h>
 #include <sys/resource.h>
+#include <fcntl.h> 
 
 
 void REPORTER(char* log_info) {
@@ -26,15 +28,15 @@ const int TIMETOP = 60;
 const long long MEMTOP = 1024 * 1024 * 1024;
 
 
-const int syscal_white_list[32] = {16,
-	SCMP_SYS(close), SCMP_SYS(open),
-	SCMP_SYS(write), SCMP_SYS(read),
+const int syscal_white_list[32] = {15,
+	SCMP_SYS(close), SCMP_SYS(read),
+	SCMP_SYS(write), SCMP_SYS(tgkill),
 	SCMP_SYS(brk), SCMP_SYS(rt_sigprocmask),
 	SCMP_SYS(access), SCMP_SYS(mmap),
 	SCMP_SYS(mprotect), SCMP_SYS(fstat),
 	SCMP_SYS(arch_prctl), SCMP_SYS(munmap),
 	SCMP_SYS(exit_group), SCMP_SYS(vfork),
-	SCMP_SYS(writev), SCMP_SYS(tgkill),
+	SCMP_SYS(writev)
 };
 
 
@@ -43,8 +45,7 @@ public:
 	int time_lim;
 	int memory_lim;
 	
-	LimitList();
-	
+	LimitList();	
 	LimitList(int, int);
 };
 
@@ -56,12 +57,10 @@ public:
 	char* run_program;
 	char* in_file;
 	char* out_file;
-	char* ans_file;
 	LimitList lims;
 	
 	RunConfig();
-	
-	RunConfig(bool, bool, char*, char*, char*, char*, LimitList);
+	RunConfig(bool, bool, char*, char*, char*, LimitList);
 };
 
 
@@ -69,7 +68,7 @@ class RunResult {
 public:
 	int use_time;
 	int use_memory;
-	int run_statu;
+	int run_status;
 	bool judger_error;
 	
 	RunResult();
