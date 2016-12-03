@@ -11,19 +11,7 @@
 #include <sys/wait.h>
 #include <sys/resource.h>
 #include <fcntl.h> 
-
-
-void REPORTER(char* log_info) {
-	FILE* stream;
-	stream = fopen("../TJudger.log", "a");
-	time_t now_time = time(NULL);
-	char output_time[64];
-	strftime(output_time, sizeof(output_time), "%F %R:%S",localtime(&now_time));
-	fprintf(stream, "[%s] : %s\n", output_time, log_info);
-	fclose(stream);
-	exit(0);
-}
-
+#include "tools.cpp"
 
 const int TIMETOP = 60;
 const long long MEMTOP = 1024 * 1024 * 1024;
@@ -37,7 +25,7 @@ const int syscal_white_list[32] = {16,
 	SCMP_SYS(mprotect), SCMP_SYS(fstat),
 	SCMP_SYS(arch_prctl), SCMP_SYS(munmap),
 	SCMP_SYS(exit_group), SCMP_SYS(vfork),
-	SCMP_SYS(writev), SCMP_SYS(lseek)
+	SCMP_SYS(writev)
 };
 
 
@@ -45,9 +33,10 @@ class LimitList {
 public:
 	int time_lim;
 	int memory_lim;
+	int output_lim;
 	
 	LimitList();	
-	LimitList(int, int);
+	LimitList(int, int, int);
 };
 
 
@@ -85,7 +74,7 @@ private:
 	
 	int load_limit(const RunConfig&);
 public:
-	void runner(const RunConfig&, RunResult&);
+	int runner(const RunConfig&, RunResult&);
 };
 
 

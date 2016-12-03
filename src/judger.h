@@ -3,6 +3,7 @@
 
 
 #include <string.h>
+#include <sys/stat.h>
 #include "sandbox.cpp"
 
 
@@ -13,8 +14,8 @@ public:
 	char* in;
 	char* out;
 	char* ans;
-	int time_use;
-	int memory_use;
+	int use_time;
+	int use_memory;
 	
 	Result();
 	Result(char*, char*, char*, char*, char*, int, int);
@@ -24,6 +25,7 @@ public:
 class Config {
 public:
 	char* language;
+	char* source_name;
 	char* file_name;
 	char* in_file;
 	char* out_file;
@@ -31,20 +33,18 @@ public:
 	int time_limit;
 	int memory_limit;
 	char* special_judge;
-	char* compile_option;
+	char** compile_option;
 	
 	Config();
-	Config(char*, char*, char*, char*, char*, int, int, char*);
+	Config(char*, char*, char*, char*, char*, int, int, char*, char**);
 };
 
 
 void generate_name(const char*);
 
-int compile(const char*, char*, char**);
+int compile(const char*, char*, char*, char**);
 
-void run(const Config&, Result&);
-
-void get_rusult(const Config&, Result&);
+void run(Config&, Result&);
 
 
 #endif

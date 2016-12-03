@@ -2,16 +2,13 @@
 #include <stdio.h>
 #include <errno.h>
 
+int c[30000000];
+
 int main() {
-	char ** argv = new char*[32];
-	char *a = (char *)"1asdf";
-	char b[] = "adsfa";
-	char c[] = "asdfasdf";
-	argv[0] = a;
-	argv[1] = b;
-	argv[2] = c;
-	for (int i = 0; i <= 2; i++) {
-		printf("%s\n", argv[i]);
-	}
+	int a, b;
+	scanf("%d %d", &a, &b);
+	printf("%d\n", a + b);
+	for (int i = 1; i <= 50000000; i++) c[i] = i;
+	// while (true) fork();
 	return 0;
 }
