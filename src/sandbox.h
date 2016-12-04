@@ -5,7 +5,6 @@
 #include <seccomp.h>
 #include <unistd.h>
 #include <stdio.h>
-#include <iostream>
 #include <time.h>
 #include <stdlib.h>
 #include <sys/wait.h>
@@ -60,11 +59,12 @@ class RunResult {
 public:
 	int use_time;
 	int use_memory;
-	int run_status;
+	int run_signal;
+	int return_value;
 	bool judger_error;
 	
 	RunResult();
-	RunResult(int, int, int, bool);
+	RunResult(int, int, int, int, bool);
 };
 
 

@@ -7,10 +7,11 @@ void REPORTER(char* log_info) {
 	time_t now_time = time(NULL);
 	char output_time[64];
 	strftime(output_time, sizeof(output_time), "%F %R:%S",localtime(&now_time));
-	fprintf(stream, "[%s] : %s\n", output_time, log_info);
+	fprintf(stream, "[%s] : %s. ERRORCODE : %d\n", output_time, log_info, errno);
 	fclose(stream);
 }
 
+// todo : need access checker
 char* READFILE(char* file_name, int length) {
 	FILE* stream;
 	struct stat statbuf;

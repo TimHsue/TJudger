@@ -4,6 +4,7 @@
 
 #include <stdio.h>
 #include <sys/stat.h>
+#include <errno.h>
 
 
 void REPORTER(char*);
