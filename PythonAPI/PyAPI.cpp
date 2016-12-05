@@ -96,24 +96,32 @@ PyObject* generate_result(Result& RES) {
 		REPORTER((char*)"Set status fail");
 	}
 	
-	tmp = PyString_FromString(RES.compile_info);
-	if (PyDict_SetItemString(pyoRES, "compile_info", tmp)) {
-		REPORTER((char*)"Set compile information fail");
+	if (RES.compile_info != NULL) {
+		tmp = PyString_FromString(RES.compile_info);
+		if (PyDict_SetItemString(pyoRES, "compile_info", tmp)) {
+			REPORTER((char*)"Set compile information fail");
+		}
 	}
-
-	tmp = PyString_FromString(RES.in);
-	if (PyDict_SetItemString(pyoRES, "in", tmp)) {
-		REPORTER((char*)"Set in fail");
+	
+	if (RES.in != NULL) {
+		tmp = PyString_FromString(RES.in);
+		if (PyDict_SetItemString(pyoRES, "in", tmp)) {
+			REPORTER((char*)"Set in fail");
+		}
 	}
-
-	tmp = PyString_FromString(RES.out);
-	if (PyDict_SetItemString(pyoRES, "out", tmp)) {
-		REPORTER((char*)"Set out fail");
+	
+	if (RES.out != NULL) {
+		tmp = PyString_FromString(RES.out);
+		if (PyDict_SetItemString(pyoRES, "out", tmp)) {
+			REPORTER((char*)"Set out fail");
+		}
 	}
-
-	tmp = PyString_FromString(RES.ans);
-	if (PyDict_SetItemString(pyoRES, "ans", tmp)) {
-		REPORTER((char*)"Set ans fail");
+	
+	if (RES.ans != NULL) {
+		tmp = PyString_FromString(RES.ans);
+		if (PyDict_SetItemString(pyoRES, "ans", tmp)) {
+			REPORTER((char*)"Set ans fail");
+		}
 	}
 	
 	tmp = PyLong_FromLong(RES.use_time);
@@ -149,7 +157,7 @@ PyObject* python_run(PyObject* self, PyObject* argv) {
 		REPORTER((char*)"Generate config from python fail");
 		return generate_result(RES);
 	}
-	
+
 	run(CFG, RES);
 	
 	pyoRES = generate_result(RES);

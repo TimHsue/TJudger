@@ -1,4 +1,4 @@
-#include <stdlib.h>
+#include <sstdlib.h>
 
 int a[10000];
 

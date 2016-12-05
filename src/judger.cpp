@@ -152,7 +152,7 @@ int get_result(Config& CFG, Result& RES) {
 		}
 		RES.score = score;
 		if (score == 100) {
-			RES.status = (char*)"Accept";
+			RES.status = (char*)"Accepted";
 		} else if (score == 0) {
 			RES.status = (char*)"Wrong Answer";
 		} else {
@@ -169,7 +169,7 @@ int get_result(Config& CFG, Result& RES) {
 		
 		if (not tmp_res) {
 			RES.score = 100;
-			RES.status = (char*)"Accept";
+			RES.status = (char*)"Accepted";
 		} else {
 			RES.status = (char*)"Wrong Answer";
 		}
@@ -179,7 +179,7 @@ int get_result(Config& CFG, Result& RES) {
 
 
 void run(Config &CFG, Result &RES) {
-	RES = Result(0, (char*)"System Error", (char*)"", (char*)"", (char*)"", (char*)"", 0, 0);
+	RES = Result(0, (char*)"System Error", NULL, NULL, NULL, NULL, 0, 0);
 	char file_name[64] = {0};
 
 	if (compile(CFG.language, CFG.source_name, file_name, CFG.compile_option)) {

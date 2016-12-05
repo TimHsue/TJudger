@@ -23,8 +23,7 @@ const int syscal_white_list[32] = {16,
 	SCMP_SYS(access), SCMP_SYS(mmap),
 	SCMP_SYS(mprotect), SCMP_SYS(fstat),
 	SCMP_SYS(arch_prctl), SCMP_SYS(munmap),
-	SCMP_SYS(exit_group), SCMP_SYS(vfork),
-	SCMP_SYS(writev)
+	SCMP_SYS(exit_group), SCMP_SYS(writev)
 };
 
 

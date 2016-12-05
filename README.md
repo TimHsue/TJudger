@@ -52,7 +52,7 @@ The result is a struct defined in ``src/judger.h``, you can visit all things in 
 	RES.compile_info // if compile fail, it will show compile error message. Otherwise, it's empty.
 	RES.status // run status
 	RES.use_time // the total time program used ( usr + sys )
-	RES.use_memory // # the total memory program used
+	RES.use_memory // the total memory program used
 	RES.in // input detail
 	RES.out // output detail
 	RES.ans // answer detail
