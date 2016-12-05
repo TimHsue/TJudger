@@ -96,6 +96,7 @@ int compile(const char* lan, char* file_name, char* out_name, char** compile_opt
 	return 0;
 }
 
+
 int get_result(Config& CFG, Result& RES) {
 	if (CFG.special_judge != NULL) {
 		char file_name[64] = {0};
@@ -119,6 +120,10 @@ int get_result(Config& CFG, Result& RES) {
 		SandBox spj_sdb;
 		if (spj_sdb.runner(RCFG, RRES)) {
 			REPORTER((char*)"Run progream fail");
+			if (remove(CFG.file_name)) {
+				REPORTER((char*)"Delete program fail");
+				return -1;
+			}
 			return -1;
 		}
 		if (remove(CFG.file_name)) {
@@ -140,7 +145,10 @@ int get_result(Config& CFG, Result& RES) {
 		}
 		
 		int score = 0;
-		for (int i = 0; i < 7 and spj_res[i]; i++) score = (score << 3) + (score << 1) + spj_res[i] - '0';
+		for (int i = 0; i < 7 and spj_res[i]; i++) {
+			if('0' <= spj_res[i] and spj_res[i] <= '9')
+				score = (score << 3) + (score << 1) + spj_res[i] - '0';
+		}
 		RES.score = score;
 		if (score == 100) {
 			RES.status = (char*)"Accept";
@@ -150,6 +158,7 @@ int get_result(Config& CFG, Result& RES) {
 			RES.status = (char*)"Partly Correct";
 		}
 		
+		delete spj_res;
 	} else {
 		int tmp_res = compare(RES.out, RES.ans);
 		if (tmp_res == -1) {
@@ -167,13 +176,14 @@ int get_result(Config& CFG, Result& RES) {
 	return 0;
 } 
 
+
 void run(Config &CFG, Result &RES) {
 	FILE* stream;
 	RES = Result(0, (char*)"System Error", (char*)"", (char*)"", (char*)"", (char*)"", 0, 0);
 	char file_name[64] = {0};
 
 	if (compile(CFG.language, CFG.source_name, file_name, CFG.compile_option)) {
-		RES.status = (char*)"Compile porgram Error";
+		RES.status = (char*)"Compile Error";
 		return;
 	}
 	if ((RES.compile_info = READFILE((char*)"compile.out", 256)) == NULL) {
@@ -181,7 +191,7 @@ void run(Config &CFG, Result &RES) {
 		return;
 	}
 	if (access(file_name, 0) != 0) {
-		RES.status = (char*)"Compile porgram Error";
+		RES.status = (char*)"Compile Error";
 		return;
 	}
 	CFG.file_name = file_name;
@@ -249,4 +259,10 @@ void run(Config &CFG, Result &RES) {
 }
 
 
+void delete_all(Result& RES) {
+	if (RES.in != NULL) delete RES.in;
+	if (RES.out != NULL) delete RES.out;
+	if (RES.ans != NULL) delete RES.ans;
+	if (RES.compile_info != NULL) delete RES.compile_info;
+}
 

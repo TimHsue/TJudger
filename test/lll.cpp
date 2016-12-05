@@ -1,11 +1,8 @@
-#include <unistd.h>
-#include <stdio.h>
-#include <errno.h>
 #include <stdlib.h>
 
+int a[10000000];
+
 int main() {
-	int a, b;
-	scanf("%d %d", &a, &b);
-	printf("%d \n\n", a + b);
+	for (int i = 0; i < 10000000; i++) a[i] = i;
 	return 0;
 }

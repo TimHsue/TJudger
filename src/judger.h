@@ -4,8 +4,8 @@
 
 #include <string.h>
 #include <sys/stat.h>
-#include "sandbox.cpp"
-#include "comparator.cpp"
+#include "sandbox.h"
+#include "comparator.h"
 
 
 class Result {
@@ -44,6 +44,7 @@ public:
 };
 
 
+
 void generate_name(const char*);
 
 int compile(const char*, char*, char*, char**);
@@ -51,5 +52,8 @@ int compile(const char*, char*, char*, char**);
 int get_result(char*, Result&);
 
 void run(Config&, Result&);
+
+void delete_all(Result&);
+
 
 #endif
