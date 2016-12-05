@@ -157,8 +157,8 @@ int SandBox :: load_limit(const RunConfig &RCFG) {
 	rlimit rtmp;
 	
 	rtmp.rlim_max = TIMETOP;
-	rtmp.rlim_cur = (long int)(RCFG.lims.time_lim * 1.3 / 1000) + 1 < rtmp.rlim_max ?
-					(long int)(RCFG.lims.time_lim * 1.3 / 1000) + 1 : rtmp.rlim_max;
+	rtmp.rlim_cur = (unsigned long int)(RCFG.lims.time_lim * 1.3 / 1000) + 1 < rtmp.rlim_max ?
+					(unsigned long int)(RCFG.lims.time_lim * 1.3 / 1000) + 1 : rtmp.rlim_max;
 	if (setrlimit(RLIMIT_CPU, &rtmp)) {
 		REPORTER((char*)"Load cpu time limit fail.");
 		return -1;
@@ -166,24 +166,24 @@ int SandBox :: load_limit(const RunConfig &RCFG) {
 	
 	// need 32-bit system solotion
 	rtmp.rlim_max = MEMTOP;
-	rtmp.rlim_cur = 2 * RCFG.lims.memory_lim * 1024 * 1024 < rtmp.rlim_max ?
-					2 * RCFG.lims.memory_lim * 1024 * 1024 : rtmp.rlim_max;
+	rtmp.rlim_cur = (unsigned long int)2 * RCFG.lims.memory_lim * 1024 * 1024 < rtmp.rlim_max ?
+					(unsigned long int)2 * RCFG.lims.memory_lim * 1024 * 1024 : rtmp.rlim_max;
 	if (setrlimit(RLIMIT_AS, &rtmp)) {
 		REPORTER((char*)"Load memory limit fail.");
 		return -1;
 	}
 
 	rtmp.rlim_max = 512 * 1024 * 1024;
-	rtmp.rlim_cur = 2 * RCFG.lims.output_lim < rtmp.rlim_max ? 
-					2 * RCFG.lims.output_lim : rtmp.rlim_max;
+	rtmp.rlim_cur = (unsigned long int)2 * RCFG.lims.output_lim < rtmp.rlim_max ? 
+					(unsigned long int)2 * RCFG.lims.output_lim : rtmp.rlim_max;
 	if (setrlimit(RLIMIT_FSIZE, &rtmp)) {
 		REPORTER((char*)"Load output size limit fail.");
 		return -1;
 	}
 	
 	rtmp.rlim_max = MEMTOP;
-	rtmp.rlim_cur = 2 * RCFG.lims.memory_lim * 1024 * 1024 < rtmp.rlim_max ?
-					2 * RCFG.lims.memory_lim * 1024 * 1024 : rtmp.rlim_max;
+	rtmp.rlim_cur = (unsigned long int)2 * RCFG.lims.memory_lim * 1024 * 1024 < rtmp.rlim_max ?
+					(unsigned long int)2 * RCFG.lims.memory_lim * 1024 * 1024 : rtmp.rlim_max;
 	if (setrlimit(RLIMIT_STACK, &rtmp)) {
 		REPORTER((char*)"Load stack size limit fail.");
 		return -1;

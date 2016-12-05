@@ -77,10 +77,11 @@ int compile(const char* lan, char* file_name, char* out_name, char** compile_opt
 	argv[0] = compiler;
 	argv[1] = file_name;
 	argv[2] = out_com;
-
-	int len = 3;
-	while(compile_opt[len - 3] != NULL) argv[len++] = compile_opt[len - 3];
-	argv[len] = NULL;
+	if (compile_opt != NULL) {
+		int len = 3;
+		while(compile_opt[len - 3] != NULL) argv[len] = compile_opt[len - 3], len += 1;
+		argv[len] = NULL;
+	} else argv[3] = NULL;
 	
 	SandBox com_sdb;
 	RunConfig RRCF(true, false, true, compiler, (char*)"", (char*)"compile.out", argv, LimitList(10000, 128, 512 * 1024 * 1024));
@@ -178,7 +179,6 @@ int get_result(Config& CFG, Result& RES) {
 
 
 void run(Config &CFG, Result &RES) {
-	FILE* stream;
 	RES = Result(0, (char*)"System Error", (char*)"", (char*)"", (char*)"", (char*)"", 0, 0);
 	char file_name[64] = {0};
 
@@ -195,7 +195,7 @@ void run(Config &CFG, Result &RES) {
 		return;
 	}
 	CFG.file_name = file_name;
-		
+	
 	struct stat statbuf;
 	if (stat(CFG.ans_file, &statbuf)) {
 		REPORTER((char*)"Get answer file size fail");
@@ -224,7 +224,7 @@ void run(Config &CFG, Result &RES) {
 		if (RRES.return_value == 0) RES.status = (char*)"Run Successfully";
 		else RES.status = (char*)"Runtime Error";
 		if (RRES.use_time > CFG.time_limit) RES.status = (char*)"Time Limit Exceed";
-		if (RRES.use_memory > CFG.memory_limit) RES.status = (char*)"Memory Limit Exceed";
+		if (RRES.use_memory / 1024 > CFG.memory_limit) RES.status = (char*)"Memory Limit Exceed";
 	} else if (RRES.run_signal == 31) {
 		RES.status = (char*)"Dangerous System Call";
 	} else if (RRES.run_signal == 9) {
