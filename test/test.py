@@ -4,13 +4,13 @@ import TJudger
 
 CFG = {
 	'language':'C++',
-	'source_name':'lll.cpp',
-	'in_file':u'/home/timhsue/TJudger/test/lll.in',
-	'out_file':u'lll.out',
-	'ans_file':u'/home/timhsue/TJudger/test/lll.ans',
+	'source_name':'test1.cpp',
+	'in_file':'lll.in',
+	'out_file':'lll.out',
+	'ans_file':'lll.ans',
 	'time_limit':1000,
 	'memory_limit':64,
-	'compile option': ['-O2', '-lm', '-DONLINE_JUDGE']
+	'compile option': ['-lm', '-DONLINE_JUDGE']
 }
 
 print CFG

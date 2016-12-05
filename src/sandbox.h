@@ -253,8 +253,8 @@ int SandBox :: runner(const RunConfig &RCFG, RunResult &RES) {
 			if (WIFSIGNALED(status_val)) RES.run_signal = WTERMSIG(status_val);
 			RES.return_value = WEXITSTATUS(status_val);
 			RES.judger_error = 0;
-			RES.use_time += (int)((Ruse.ru_stime.tv_sec + Ruse.ru_utime.tv_sec) * 1000);
-			RES.use_time += (int)((Ruse.ru_stime.tv_usec + Ruse.ru_utime.tv_usec) / 1000);
+			RES.use_time += (int)(Ruse.ru_utime.tv_sec) * 1000);
+			RES.use_time += (int)(Ruse.ru_utime.tv_usec) / 1000);
 			RES.use_memory = (int)(Ruse.ru_maxrss);
 		}
 	}
