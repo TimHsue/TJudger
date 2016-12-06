@@ -221,7 +221,7 @@ int SandBox :: runner(const RunConfig &RCFG, RunResult &RES) {
 		
 		if (RCFG.is_limited) if (load_limit(RCFG)) return -1;
 		if (RCFG.use_sandbox) if (load_syscal_list(RCFG)) return -1;
-	
+		
 		if (RCFG.is_compilation) execvp(RCFG.run_program, RCFG.argv);
 		else execve(RCFG.run_program, RCFG.argv, NULL);
 		
@@ -229,6 +229,10 @@ int SandBox :: runner(const RunConfig &RCFG, RunResult &RES) {
 		exit(0);
 		
 	} else {
+		char tmp[64];
+		sprintf(tmp, "son pid : %d", s_pid);
+		REPORTER(tmp);
+		
 		pid_t surveillant = fork();
 		
 		if (surveillant < 0) {
@@ -241,14 +245,22 @@ int SandBox :: runner(const RunConfig &RCFG, RunResult &RES) {
 			sleep(time_lim);
 			kill(s_pid, SIGKILL);
 			exit(0);
-			
 		} else {
+			char tmp[64];
+			sprintf(tmp, "surveillant pid : %d", surveillant);
+			REPORTER(tmp);
+			
 			if (wait4(s_pid, &status_val, 0, &Ruse) == -1) {
 				REPORTER((char*)"Wait child fail.");
 				return -1;
 			}
 			
+			int sstatus;
 			kill(surveillant, SIGKILL);
+			if (waitpid(surveillant, &sstatus, 0) == -1) {
+				REPORTER((char*)"Wait surveillant fail.");
+				return -1;
+			}
 			
 			if (WIFSIGNALED(status_val)) RES.run_signal = WTERMSIG(status_val);
 			RES.return_value = WEXITSTATUS(status_val);
@@ -256,6 +268,7 @@ int SandBox :: runner(const RunConfig &RCFG, RunResult &RES) {
 			RES.use_time += (int)(Ruse.ru_utime.tv_sec * 1000);
 			RES.use_time += (int)(Ruse.ru_utime.tv_usec / 1000);
 			RES.use_memory = (int)(Ruse.ru_maxrss);
+			
 		}
 	}
 	return 0;

@@ -19,7 +19,7 @@ int main() {
 	}
 	
 	*/
-	char* test[] = {(char*)"AC", (char*)"RE", (char*)"TLE", (char*)"MLE", (char*)"CE", (char*)"WA", (char*)"DSC", (char*)"OLE"};
+	char* test[] = {(char*)"OLE", (char*)"RE", (char*)"TLE", (char*)"MLE", (char*)"CE", (char*)"WA", (char*)"DSC", (char*)"AC"};
 	char tmp[32];
 	for (int i = 0; i < 8; i++) {
 		strcpy(tmp, test[i]);
@@ -34,9 +34,15 @@ int main() {
 		printf("statu: %s\ntime: %d\nmemory: %d\n", RES.status, RES.use_time, RES.use_memory);
 		printf("in: %s\nout: %s\nans: %s\n", RES.in, RES.out, RES.ans);
 		printf("\n\n");
-		// delete_all(RES);
+		delete_all(RES);
 	}
 	
+	for (int i = 0; i < 30; i++) {
+		RES = run(CFG);
+		// printf("memory: %d\n", RES.use_memory);
+		printf("time: %d memory: %d\n", RES.use_time, RES.use_memory);
+		delete_all(RES);
+	}
 	
 	return 0;
 }
