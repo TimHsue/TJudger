@@ -46,9 +46,11 @@ char* READFILE(char* file_name, int length) {
 	char* text = new char[size + 1];
 	if ((int)fread(text, 1, size, stream) != size) {
 		REPORTER((char*)"Read file fail");
+		fclose(stream);
 		return NULL;
 	}
 	text[size] = 0;
+	fclose(stream);
 	
 	return text;
 }

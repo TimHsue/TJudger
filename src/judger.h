@@ -51,7 +51,9 @@ int compile(const char*, char*, char*, char**);
 
 int get_result(char*, Result&);
 
-void run(Config&, Result&);
+Result run(Config&);
+
+void delete_files(Result&);
 
 void delete_all(Result&);
 

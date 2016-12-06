@@ -1,3 +1,4 @@
+#! /usr/bin/python
 # -*- coding: utf-8 -*-
 
 import TJudger
@@ -25,4 +26,9 @@ for item in a:
 	print item + " Result:"
 	print RES
 	print "\n"
+	
+for i in range(1, 10):
+	CFG['source_name'] = 'AC/lll.cpp'
+	RES = TJudger.run(CFG)
+	print RES
 

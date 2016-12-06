@@ -197,10 +197,10 @@ int SandBox :: runner(const RunConfig &RCFG, RunResult &RES) {
 	rusage Ruse;
 	int status_val;
 	
-	pid_t s_pid = vfork();
+	pid_t s_pid = fork();
 	
 	if (s_pid < 0) {
-		REPORTER((char*)"Main vfork fail.");
+		REPORTER((char*)"Main fork fail.");
 		return -1;
 		
 	} else if (s_pid == 0) {
@@ -215,7 +215,7 @@ int SandBox :: runner(const RunConfig &RCFG, RunResult &RES) {
 		}
 		
 		if (RCFG.is_compilation and freopen(RCFG.out_file, "w", stderr) == NULL) {
-			REPORTER((char*)"Freopen out fail.");
+			REPORTER((char*)"Freopen err fail.");
 			return -1;
 		}
 		
@@ -226,7 +226,7 @@ int SandBox :: runner(const RunConfig &RCFG, RunResult &RES) {
 		else execve(RCFG.run_program, RCFG.argv, NULL);
 		
 		REPORTER((char*)"Execve or execvp fail");
-		return -1;
+		exit(0);
 		
 	} else {
 		pid_t surveillant = fork();

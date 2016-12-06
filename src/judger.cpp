@@ -60,11 +60,11 @@ int compile(const char* lan, char* file_name, char* out_name, char** compile_opt
 	char out_com[32] = {0};
 	
 	if (strcmp(lan, (char*)"C++") == 0) {
-		strcpy(compiler, "g++");
+		strcpy(compiler, (char*)"g++");
 	} else if (strcmp(lan, (char*)"C") == 0) {
-		strcpy(compiler, "gcc");
+		strcpy(compiler, (char*)"gcc");
 	} else if (strcmp(lan, (char*)"Pascal") == 0) {
-		strcpy(compiler, "fpc");
+		strcpy(compiler, (char*)"fpc");
 	} else {
 		REPORTER((char*)"No Langue");
 		return -1;
@@ -89,7 +89,7 @@ int compile(const char* lan, char* file_name, char* out_name, char** compile_opt
 	
 	if (com_sdb.runner(RRCF, RRES)) {
 		REPORTER((char*)"Compile fail.");
-		if (argv != NULL) delete argv;
+		if (argv != NULL) delete[] argv;
 		return -1;
 	}
 
@@ -104,11 +104,11 @@ int get_result(Config& CFG, Result& RES) {
 		char* argv[] = {NULL};
 
 		if (compile(CFG.spj_language, CFG.special_judge, file_name, argv)) {
-			RES.status = (char*)"System Error";
+			strcpy(RES.status, (char*)"System Error");
 			return -1;
 		}
 		if (access(file_name, 0) != 0) {
-			RES.status = (char*)"Compile Special Judge Error";
+			strcpy(RES.status, (char*)"Compile Special Judge Error");
 			return 0;
 		}
 		
@@ -121,22 +121,22 @@ int get_result(Config& CFG, Result& RES) {
 		SandBox spj_sdb;
 		if (spj_sdb.runner(RCFG, RRES)) {
 			REPORTER((char*)"Run progream fail");
-			if (remove(CFG.file_name)) {
+			if (remove(file_name)) {
 				REPORTER((char*)"Delete program fail");
 				return -1;
 			}
 			return -1;
 		}
-		if (remove(CFG.file_name)) {
+		if (remove(file_name)) {
 			REPORTER((char*)"Delete program fail");
 			return -1;
 		}
 		
 		if (RRES.judger_error) {
-			RES.status = (char*)"Judger Error";
+			strcpy(RES.status, (char*)"Judger Error");
 			return 0;
 		} else if (RRES.return_value | RRES.run_signal) {
-			RES.status = (char*)"Run Special Judge Error";
+			strcpy(RES.status, (char*)"Run Special Judge Error");
 			return 0;
 		}
 		
@@ -152,11 +152,11 @@ int get_result(Config& CFG, Result& RES) {
 		}
 		RES.score = score;
 		if (score == 100) {
-			RES.status = (char*)"Accepted";
+			strcpy(RES.status, (char*)"Accepted");
 		} else if (score == 0) {
-			RES.status = (char*)"Wrong Answer";
+			strcpy(RES.status, (char*)"Wrong Answer");
 		} else {
-			RES.status = (char*)"Partly Correct";
+			strcpy(RES.status, (char*)"Partly Correct");
 		}
 		
 		if (spj_res != NULL) delete[] spj_res;
@@ -169,105 +169,136 @@ int get_result(Config& CFG, Result& RES) {
 		
 		if (not tmp_res) {
 			RES.score = 100;
-			RES.status = (char*)"Accepted";
+			strcpy(RES.status, (char*)"Accepted");
 		} else {
-			RES.status = (char*)"Wrong Answer";
+			strcpy(RES.status, (char*)"Wrong Answer");
 		}
 	}
 	return 0;
 } 
 
 
-void run(Config &CFG, Result &RES) {
-	RES = Result(0, (char*)"System Error", NULL, NULL, NULL, NULL, 0, 0);
+Result run(Config &CFG) {
+	char* status = new char[32];
+	strcpy(status, (char*)"System Error");
+	Result RES(0, status, NULL, NULL, NULL, NULL, 0, 0);
 	char file_name[64] = {0};
 
 	if (compile(CFG.language, CFG.source_name, file_name, CFG.compile_option)) {
-		RES.status = (char*)"Compile Error";
-		return;
+		strcpy(status, (char*)"Compile Error");
+		RES.status = status;
+		return RES;
 	}
 	if ((RES.compile_info = READFILE((char*)"compile.out", 256)) == NULL) {
 		REPORTER((char*)"Read compile result fail");
-		return;
+		return RES;
 	}
 	if (access(file_name, 0) != 0) {
-		RES.status = (char*)"Compile Error";
-		return;
+		strcpy(status, (char*)"Compile Error");
+		RES.status = status;
+		return RES;
 	}
-	CFG.file_name = file_name;
 	
 	struct stat statbuf;
 	if (stat(CFG.ans_file, &statbuf)) {
-		RES.status = (char*)"No Answers";
+		strcpy(status, (char*)"No Answers");
+		RES.status = status;
 		REPORTER((char*)"Get answer file size fail");
-		if (remove(CFG.file_name)) {
+		if (remove(file_name)) {
 			REPORTER((char*)"Delete program fail");
-			return;
+			return RES;
 		}
-		return;
+		return RES;
 	}
 	int size = statbuf.st_size;
 	
 	RunResult RRES;
-	RunConfig RCFG(false, true, true, CFG.file_name, CFG.in_file, CFG.out_file, NULL, 
+	RunConfig RCFG(false, true, true, file_name, CFG.in_file, CFG.out_file, NULL, 
 					LimitList(CFG.time_limit, CFG.memory_limit, size));
 	SandBox run_sdb;
 	if (run_sdb.runner(RCFG, RRES)) {
 		REPORTER((char*)"Run progream fail");
-		return;
+		return RES;
 	}
-	if (remove(CFG.file_name)) {
+	if (remove(file_name)) {
 		REPORTER((char*)"Delete program fail");
-		return;
+		return RES;
 	}
 	
 	RES.use_time = RRES.use_time;
 	RES.use_memory = RRES.use_memory;
 	if (RRES.judger_error) {
-		RES.status = (char*)"Judger Error";
+		strcpy(status, (char*)"Judger Error");
 	} else if (RRES.run_signal == 0) {
-		if (RRES.return_value == 0) RES.status = (char*)"Run Successfully";
-		else RES.status = (char*)"Runtime Error";
-		if (RRES.use_time > CFG.time_limit) RES.status = (char*)"Time Limit Exceed";
-		if (RRES.use_memory > CFG.memory_limit * 1024) RES.status = (char*)"Memory Limit Exceed";
+		if (RRES.return_value == 0) {
+			strcpy(status, (char*)"Run Successfully");
+		} else {
+			strcpy(status, (char*)"Runtime Error");
+		}
+		if (RRES.use_time > CFG.time_limit) {
+			strcpy(status, (char*)"Time Limit Exceed");
+		} else if (RRES.use_memory > CFG.memory_limit * 1024) {
+			strcpy(status, (char*)"Memory Limit Exceed");
+		}
 	} else if (RRES.run_signal == 31) {
-		RES.status = (char*)"Dangerous System Call";
+		strcpy(status, (char*)"Dangerous System Call");
 	} else if (RRES.run_signal == 9) {
-		if (RRES.use_time > CFG.time_limit) RES.status = (char*)"Time Limit Exceed";
+		if (RRES.use_time > CFG.time_limit) {
+			strcpy(status, (char*)"Time Limit Exceed");
+		}
 	} else if (RRES.run_signal == 11) {
-		if (RRES.use_memory > CFG.memory_limit * 1024) RES.status = (char*)"Memory Limit Exceed";
-		else RES.status = (char*)"Runtime Error";
+		if (RRES.use_memory > CFG.memory_limit * 1024) {
+			strcpy(status, (char*)"Memory Limit Exceed");
+		} else {
+			strcpy(status, (char*)"Runtime Error");
+		}
 	} else if (RRES.run_signal == 25) {
-		RES.status = (char*)"Output Limit Exceed";
+		strcpy(status, (char*)"Output Limit Exceed");
 	}
+	RES.status = status;
 	
 	// limit singel file size below 512MB
 	if ((RES.in = READFILE(CFG.in_file, 512 * 1024 * 1024)) == NULL) {
 		REPORTER((char*)"Read in file fail");
-		return;
+		delete_files(RES);
+		return RES;
 	}
 	if ((RES.out = READFILE(CFG.out_file, 512 * 1024 * 1024)) == NULL) {
 		REPORTER((char*)"Read out file fail");
-		return;
+		delete_files(RES);
+		return RES;
 	}
 	if ((RES.ans = READFILE(CFG.ans_file, 512 * 1024 * 1024)) == NULL) {
 		REPORTER((char*)"Read ans file fail");
-		return;
+		delete_files(RES);
+		return RES;
 	}
 	
 	if (strcmp(RES.status, (char*)"Run Successfully") == 0) {
 		if (get_result(CFG, RES)) {
 			REPORTER((char*)"Get Result fail");
-			return;
+			delete_files(RES);
+			return RES;
 		}
 	}
+	
+	return RES;
 }
 
 
-void delete_all(Result& RES) {
+void delete_files(Result& RES) {
 	if (RES.in != NULL) delete []RES.in;
 	if (RES.out != NULL) delete []RES.out;
 	if (RES.ans != NULL) delete []RES.ans;
 	if (RES.compile_info != NULL) delete []RES.compile_info;
+}
+
+
+void delete_all(Result& RES) {
+	if (RES.in != NULL) delete RES.in;
+	if (RES.out != NULL) delete RES.out;
+	if (RES.ans != NULL) delete RES.ans;
+	if (RES.compile_info != NULL) delete RES.compile_info;
+	if (RES.status != NULL) delete RES.status;
 }
 

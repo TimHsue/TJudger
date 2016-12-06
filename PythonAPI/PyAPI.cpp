@@ -158,7 +158,7 @@ PyObject* python_run(PyObject* self, PyObject* argv) {
 		return generate_result(RES);
 	}
 
-	run(CFG, RES);
+	RES = run(CFG);
 	
 	pyoRES = generate_result(RES);
 	delete_all(RES);
