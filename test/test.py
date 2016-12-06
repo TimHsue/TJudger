@@ -2,9 +2,13 @@
 
 import TJudger
 
+
+a = ["AC", "WA", "CE", "RE", "TLE", "MLE", "DSC", "OLE"]
+
+
 CFG = {
 	'language':'C++',
-	'source_name':'test1.cpp',
+	'source_name':'MLE/lll.cpp',
 	'in_file':'lll.in',
 	'out_file':'lll.out',
 	'ans_file':'lll.ans',
@@ -13,9 +17,12 @@ CFG = {
 	'compile option': ['-lm', '-DONLINE_JUDGE']
 }
 
-print CFG
-# print "Begin"
-RES = TJudger.run(CFG)
-# print "End"
+for item in a:
+	CFG['source_name'] = item + '/lll.cpp'
+	print item + " Config:"
+	print CFG
+	RES = TJudger.run(CFG)
+	print item + " Result:"
+	print RES
+	print "\n"
 
-print RES

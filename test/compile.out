@@ -1,3 +1,0 @@
-test1.cpp:8:16: warning: extended initializer lists only available with -std=c++11 or -std=gnu++11
- uint8_t map[N] { };
-                ^

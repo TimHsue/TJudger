@@ -162,7 +162,6 @@ PyObject* python_run(PyObject* self, PyObject* argv) {
 	
 	pyoRES = generate_result(RES);
 	delete_all(RES);
-	delete CFG.compile_option;
 	return pyoRES;
 }
 

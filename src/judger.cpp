@@ -89,11 +89,11 @@ int compile(const char* lan, char* file_name, char* out_name, char** compile_opt
 	
 	if (com_sdb.runner(RRCF, RRES)) {
 		REPORTER((char*)"Compile fail.");
-		delete argv;
+		if (argv != NULL) delete argv;
 		return -1;
 	}
 
-	delete argv;
+	if (argv != NULL) delete[] argv;
 	return 0;
 }
 
@@ -159,7 +159,7 @@ int get_result(Config& CFG, Result& RES) {
 			RES.status = (char*)"Partly Correct";
 		}
 		
-		delete spj_res;
+		if (spj_res != NULL) delete[] spj_res;
 	} else {
 		int tmp_res = compare(RES.out, RES.ans);
 		if (tmp_res == -1) {
@@ -198,7 +198,12 @@ void run(Config &CFG, Result &RES) {
 	
 	struct stat statbuf;
 	if (stat(CFG.ans_file, &statbuf)) {
+		RES.status = (char*)"No Answers";
 		REPORTER((char*)"Get answer file size fail");
+		if (remove(CFG.file_name)) {
+			REPORTER((char*)"Delete program fail");
+			return;
+		}
 		return;
 	}
 	int size = statbuf.st_size;
@@ -224,13 +229,13 @@ void run(Config &CFG, Result &RES) {
 		if (RRES.return_value == 0) RES.status = (char*)"Run Successfully";
 		else RES.status = (char*)"Runtime Error";
 		if (RRES.use_time > CFG.time_limit) RES.status = (char*)"Time Limit Exceed";
-		if (RRES.use_memory / 1024 > CFG.memory_limit) RES.status = (char*)"Memory Limit Exceed";
+		if (RRES.use_memory > CFG.memory_limit * 1024) RES.status = (char*)"Memory Limit Exceed";
 	} else if (RRES.run_signal == 31) {
 		RES.status = (char*)"Dangerous System Call";
 	} else if (RRES.run_signal == 9) {
 		if (RRES.use_time > CFG.time_limit) RES.status = (char*)"Time Limit Exceed";
 	} else if (RRES.run_signal == 11) {
-		if (RRES.use_memory > CFG.memory_limit) RES.status = (char*)"Memory Limit Exceed";
+		if (RRES.use_memory > CFG.memory_limit * 1024) RES.status = (char*)"Memory Limit Exceed";
 		else RES.status = (char*)"Runtime Error";
 	} else if (RRES.run_signal == 25) {
 		RES.status = (char*)"Output Limit Exceed";
@@ -260,9 +265,9 @@ void run(Config &CFG, Result &RES) {
 
 
 void delete_all(Result& RES) {
-	if (RES.in != NULL) delete RES.in;
-	if (RES.out != NULL) delete RES.out;
-	if (RES.ans != NULL) delete RES.ans;
-	if (RES.compile_info != NULL) delete RES.compile_info;
+	if (RES.in != NULL) delete []RES.in;
+	if (RES.out != NULL) delete []RES.out;
+	if (RES.ans != NULL) delete []RES.ans;
+	if (RES.compile_info != NULL) delete []RES.compile_info;
 }
 
