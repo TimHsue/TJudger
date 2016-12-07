@@ -8,8 +8,7 @@
 #include "comparator.h"
 
 
-class Result {
-public:
+typedef struct Result {
 	int score;
 	char* status;
 	char* compile_info;
@@ -18,17 +17,12 @@ public:
 	char* ans;
 	int use_time;
 	int use_memory;
-	
-	Result();
-	Result(int, char*, char*, char*, char*, char*, int, int);
-};
+} Result;
 
 
-class Config {
-public:
+typedef struct Config {
 	char* language;
 	char* source_name;
-	char* file_name;
 	char* in_file;
 	char* out_file;
 	char* ans_file;
@@ -37,25 +31,21 @@ public:
 	char** compile_option;
 	char* special_judge;
 	char* spj_language;
-	
-	Config();
-	Config(char*, char*, char*, char*, char*, int, int, char**);
-	Config(char*, char*, char*, char*, char*, int, int, char**, char*, char*);
-};
+} Config;
 
 
 
-void generate_name(const char*);
+void generate_name(const char*, char*);
 
 int compile(const char*, char*, char*, char**);
 
-int get_result(char*, Result&);
+int get_result(Config *, Result*);
 
-Result run(Config&);
+Result run(Config*);
 
-void delete_files(Result&);
+void delete_files(Result*);
 
-void delete_all(Result&);
+void delete_all(Result*);
 
 
 #endif

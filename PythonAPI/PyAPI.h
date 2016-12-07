@@ -3,16 +3,18 @@
 
 
 #include "Python.h"
-#include "../src/judger.cpp"
+#include "../src/judger.c"
 
 
-char** generate_argv(PyObject* pyoargv);
+char** generate_argv(PyObject*);
 
-int generate_config(Config& CFG, PyObject* pyoCFG);
+int generate_config(Config*, PyObject*);
 
-PyObject* python_run(PyObject* self, PyObject* argv);
+PyObject* python_run(PyObject*, PyObject*);
 
-extern "C" void initTJudger();
+PyObject* generate_result(Result*);
+
+void initTJudger(void);
 
 
 #endif
