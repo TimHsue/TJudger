@@ -27,53 +27,63 @@ int generate_config(Config *CFG, PyObject *pyoCFG) {
 		return -1;
 	}
 	CFG -> language = PyString_AsString(tmp);
+	// Py_DECREF(tmp);
 	
 	if ((tmp = PyDict_GetItemString(pyoCFG, "source_name")) == NULL) {
 		REPORTER("Get source fail");
 		return -1;
 	}
 	CFG -> source_name = PyString_AsString(tmp);
+	// Py_DECREF(tmp);
 	
 	if ((tmp = PyDict_GetItemString(pyoCFG, "in_file")) == NULL) {
 		REPORTER("Get in fail");
 		return -1;
 	}
 	CFG -> in_file = PyString_AsString(tmp);
+	// Py_DECREF(tmp);
 	
 	if ((tmp = PyDict_GetItemString(pyoCFG, "out_file")) == NULL) {
 		REPORTER("Get out fail");
 		return -1;
 	}
 	CFG -> out_file = PyString_AsString(tmp);
+	// Py_DECREF(tmp);
 	
 	if ((tmp = PyDict_GetItemString(pyoCFG,"ans_file")) == NULL) {
 		REPORTER("Get ans fail");
 		return -1;
 	}
 	CFG -> ans_file = PyString_AsString(tmp);
+	// Py_DECREF(tmp);
 	
 	if ((tmp = PyDict_GetItemString(pyoCFG, "time_limit")) == NULL) {
 		REPORTER("Get time limit fail");
 		return -1;
 	}
 	CFG -> time_limit = PyLong_AsLong(tmp);
+	// Py_DECREF(tmp);
 	
 	if ((tmp = PyDict_GetItemString(pyoCFG, "memory_limit")) == NULL) {
 		REPORTER("Get memory limit fail");
 		return -1;
 	}
 	CFG -> memory_limit = PyLong_AsLong(tmp);
+	// Py_DECREF(tmp);
 	
 	if ((tmp = PyDict_GetItemString(pyoCFG, "compile_option")) != NULL) {
 		CFG -> compile_option = generate_argv(tmp);
+		// Py_DECREF(tmp);
 	} else CFG -> compile_option = NULL;
 	
 	if ((tmp = PyDict_GetItemString(pyoCFG, "special_judge")) != NULL) {
 		CFG -> special_judge = PyString_AsString(tmp);
+		// Py_DECREF(tmp);
 	} else CFG -> special_judge = NULL;
 	
 	if ((tmp = PyDict_GetItemString(pyoCFG, "spj_language")) != NULL) {
 		CFG -> spj_language = PyString_AsString(tmp);
+		// Py_DECREF(tmp);
 	} else CFG -> spj_language = NULL;
 	
 	return 0;
@@ -90,17 +100,20 @@ PyObject *generate_result(Result *RES) {
 	if (PyDict_SetItemString(pyoRES, "score", tmp)) {
 		REPORTER("Set score fail");
 	}
+	Py_DECREF(tmp);
 	
 	tmp = PyString_FromString(RES -> status);
 	if (PyDict_SetItemString(pyoRES, "status", tmp)) {
 		REPORTER("Set status fail");
 	}
+	Py_DECREF(tmp);
 	
 	if (RES -> compile_info != NULL) {
 		tmp = PyString_FromString(RES -> compile_info);
 		if (PyDict_SetItemString(pyoRES, "compile_info", tmp)) {
 			REPORTER("Set compile information fail");
 		}
+		Py_DECREF(tmp);
 	}
 	
 	if (RES -> in != NULL) {
@@ -108,6 +121,7 @@ PyObject *generate_result(Result *RES) {
 		if (PyDict_SetItemString(pyoRES, "in", tmp)) {
 			REPORTER("Set in fail");
 		}
+		Py_DECREF(tmp);
 	}
 	
 	if (RES -> out != NULL) {
@@ -115,6 +129,7 @@ PyObject *generate_result(Result *RES) {
 		if (PyDict_SetItemString(pyoRES, "out", tmp)) {
 			REPORTER("Set out fail");
 		}
+		Py_DECREF(tmp);
 	}
 	
 	if (RES -> ans != NULL) {
@@ -122,17 +137,20 @@ PyObject *generate_result(Result *RES) {
 		if (PyDict_SetItemString(pyoRES, "ans", tmp)) {
 			REPORTER("Set ans fail");
 		}
+		Py_DECREF(tmp);
 	}
 	
 	tmp = PyLong_FromLong(RES -> use_time);
 	if (PyDict_SetItemString(pyoRES, "use_time", tmp)) {
 		REPORTER("Set use time fail");
 	}
+	Py_DECREF(tmp);
 	
 	tmp = PyLong_FromLong(RES -> use_memory);
 	if (PyDict_SetItemString(pyoRES, "use_memory", tmp)) {
 		REPORTER("Set use memory fail");
 	}
+	Py_DECREF(tmp);
 	
 	return pyoRES;
 }
