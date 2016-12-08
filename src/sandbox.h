@@ -72,7 +72,8 @@ int load_syscal_list(const RunConfig *RCFG) {
 		return -1;
 	}
 	
-	for (int i = 1; i <= (sbx.syscal_white_list[0]); i++) {
+	int i;
+	for (i = 1; i <= (sbx.syscal_white_list[0]); i++) {
 		if (seccomp_rule_add(ctx, SCMP_ACT_ALLOW, (sbx.syscal_white_list[i]), 0) != 0) {
 			REPORTER("Add system call fail.");
 			return -1;

@@ -6,7 +6,8 @@ void generate_name(const char *in_name, char *out_name) {
 	srand((unsigned)time(NULL) + 970830);
 	int len = sizeof(in_name) / sizeof(char);
 	
-	for (int i = 0; i < len; i++) out_name[i] = rand() % 26 + 65;
+	int i;
+	for (i = 0; i < len; i++) out_name[i] = rand() % 26 + 65;
 }
 
 
@@ -100,7 +101,8 @@ int get_result(Config *CFG, Result *RES) {
 		}
 		
 		int score = 0;
-		for (int i = 0; i < 7 && spj_res[i]; i++) {
+		int i;
+		for (i = 0; i < 7 && spj_res[i]; i++) {
 			if('0' <= spj_res[i] && spj_res[i] <= '9')
 				score = (score << 3) + (score << 1) + spj_res[i] - '0';
 		}

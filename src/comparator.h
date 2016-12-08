@@ -12,14 +12,15 @@ int compare(char*, char*);
 
 
 int ignore_space_linefeed(char* adj, char* ori, int size) {
-	for (int i = 0; i < size; i++) {
+	int i;
+	for (i = 0; i < size; i++) {
 		if (ori[i] == '\n' || ori[i] == '\r') ori[i] = ' ';
 		adj[i] = ori[i];
 	}
 	adj[size++] = ' ';
 	int resize = 0;
 	char last = ' ';
-	for (int i = 0; i < size; i++) {
+	for (i = 0; i < size; i++) {
 		if (adj[i] == ' ' && last == ' ') continue;
 		adj[resize] = adj[i];
 		resize += 1;
@@ -50,7 +51,9 @@ int compare(char* out, char* ans) {
 		free(adjusted_ans);
 		return 1;
 	}
-	for (int i = 0; i < out_size; i++) {
+	
+	int i;
+	for (i = 0; i < out_size; i++) {
 		if (adjusted_out[i] != adjusted_ans[i]) {
 			free(adjusted_out);
 			free(adjusted_ans);

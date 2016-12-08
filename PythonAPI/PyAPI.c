@@ -10,7 +10,8 @@ char **generate_argv(PyObject *pyoargv) {
 	int len = PyList_GET_SIZE(pyoargv);
 	char **argv = (char**)malloc(sizeof(char*) * (len + 1));
 	
-	for (int i = 0; i < len; i++) {
+	int i;
+	for (i = 0; i < len; i++) {
 		argv[i] = PyString_AsString(PyList_GetItem(pyoargv, i));
 	}
 	argv[len] = NULL;
