@@ -1,6 +1,6 @@
 # TJudger ( NowVersion 1.0 β )
 ---
-This is a Judger for onlinejudge and loco test.  
+This is a Judger for onlinejudge and local test.  
 #Usage
 ##For Python:
 **Run ``sudo python setup.py install``**  
@@ -33,19 +33,19 @@ The result is also a dict:
 		'out': '' # output detail
 	}
 
-For detail, check ``test/test.py``.  
+For details, check ``test/test.py``.  
 ##For C/C++:
 **Check if you have installed ``libseccomp-dev``**  
 If not, you need to install it with``sudo apt-get install libseccomp-dev``.  
 Header:  
-``#include "xxxx/src/judger.cpp"``
+``#include "xxxx/src/judger.c"``
 Then initialize Config and Result with:
 
 	char* argv[] = {"xxx", "xxx", ...};
-	Config CFG(language, soure file name, in file name, out file name, ans file name, time limit(ms), memery limit(MB), argv);
+	Config CFG = {language, soure file name, in file name, out file name, ans file name, time limit(ms), memery limit(MiB), argv};
 	Result RES;
 Then run:  
-``run(CFG, RES)``  
+``RES = run(&CFG)``  
 The result is a struct defined in ``src/judger.h``, you can visit all things in RES via:
 
 	RES.score // the score program can get(top: 100)
@@ -57,16 +57,16 @@ The result is a struct defined in ``src/judger.h``, you can visit all things in 
 	RES.out // output detail
 	RES.ans // answer detail
  
-For detail, check ``test/test.cpp``.  
+For details, check ``test/test.c``.  
 
-##Status detail
+##Status details
 	System Error: Config is not correct
 	Judger Error: Judge system goes wrongly
-	Accept: Run successfully and get the correct output
+	Accepted: Run successfully and get the correct output
 	Wrong Answer: Run successfully but get the wrong output
 	Dangerous System Call: The program is killed because of runing with dangerous system call
 	Runing Error: The program is killed because of error like segmentfault
-	Compie Error: Your program sourse cannot be compiled correctly
+	Compile Error: Your program sourse cannot be compiled correctly
 	Time Limit Exceed: The Time your program costs is too large
 	Memory Limit Exceed: The memory your program costs is too large
 	Output Limit Exceed: The output of your program is too large
@@ -77,7 +77,9 @@ For detail, check ``test/test.cpp``.
 	Partly Correct: Special judger find that your answer is not completely wrong
 	
 
-( Special judge mod is untested. It will coming soon )
+( Special judge mod is untested. It will coming soon )  
+**( PyAPI may lead to unreliable memory using, I'm working to fix it. XD )**
 
 
 ##[Development Records](http://xtt.lcybox.com/wp-content/themes/XTT_A/article_tmp/sandbox.php)
+

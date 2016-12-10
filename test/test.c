@@ -8,14 +8,14 @@ int main() {
 	char* argv[] = {NULL};
 	Config CFG = {"C++", "AC/lll.cpp", "lll.in", "lll.out", "lll.ans", 1000, 64, argv};
 	Result RES;
-	/*
-	for (int i = 0; i < 20; i++) {
-		run(CFG, RES);
+	
+	for (int i = 0; i < 100; i++) {
+		RES = run(&CFG);
 		printf("memory: %d\n", RES.use_memory);
-		delete_all(RES);
+		delete_all(&RES);
 	}
 	
-	*/
+	/*
 	char* test[8] = {"OLE", "RE", "TLE", "MLE", "CE", "WA", "DSC", "AC"};
 	char tmp[32];
 	for (int i = 0; i < 8; i++) {
@@ -33,7 +33,7 @@ int main() {
 		printf("\n\n");
 		delete_all(&RES);
 	}
-	
+	*/
 	/*
 	for (int i = 0; i < 30; i++) {
 		RES = run(CFG);
