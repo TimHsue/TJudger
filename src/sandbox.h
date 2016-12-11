@@ -214,8 +214,8 @@ int runner(const RunConfig *RCFG, RunResult *RES) {
 			RES -> judger_error = 0;
 			RES -> use_time += (int)(Ruse.ru_utime.tv_sec * 1000);
 			RES -> use_time += (int)(Ruse.ru_utime.tv_usec / 1000);
-			RES -> use_memory = (int)(Ruse.ru_maxrss);
-			
+			// this may lead to wrong memory used in virtual machine
+			RES -> use_memory = (int)(1ll * Ruse.ru_minflt * sysconf(_SC_PAGESIZE) / 1024);
 		}
 	}
 	return 0;

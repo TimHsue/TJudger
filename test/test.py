@@ -16,29 +16,29 @@ CFG = {
 	 'compile option':['-O2', '-lm', '-DONLINE_JUDGE']
 }
 
-CFG['source_name'] = 'AC/lll.cpp'
+'''
+CFG['source_name'] = 'MLE/lll.cpp'
 # print CFG
 res = TJudger.run(CFG)
 print res
 
 
-'''
-
-for i in range(1, 5):
-	for item in a:
-		CFG['source_name'] = item + '/lll.cpp'
-		# print item + " Config:"
-		# print CFG
-		RES = TJudger.run(CFG)
-		# print item + " Result:"
-		print RES['use_memory']
-		print RES['use_time']
-		print ""
-'''	
-	
-'''
 for i in range(1, 10):
 	CFG['source_name'] = 'AC/lll.cpp'
 	RES = TJudger.run(CFG)
 	print RES
+
 '''
+
+a = ["AC", "WA", "RE", "TLE", "MLE", "OLE", "MLE(stack)", "CE", "DSC"]
+
+for item in a:
+	CFG['source_name'] = item + '/lll.cpp'
+	print item + " Config:"
+	print CFG
+	RES = TJudger.run(CFG)
+	print item + " Result:"
+	print RES
+	print ""
+
+

@@ -6,19 +6,19 @@ int main() {
 	// setenv("MALLOC_TRACE", "mtrace.out", 1);  
 	// mtrace();
 	char* argv[] = {NULL};
-	Config CFG = {"C++", "AC/lll.cpp", "lll.in", "lll.out", "lll.ans", 1000, 64, argv};
+	Config CFG = {"C++", "MLE/lll.cpp", "lll.in", "lll.out", "lll.ans", 1000, 128, argv};
 	Result RES;
-	
-	for (int i = 0; i < 100; i++) {
+	/*
+	for (int i = 0; i < 1; i++) {
 		RES = run(&CFG);
-		printf("memory: %d\n", RES.use_memory);
+		printf("status: %s memory: %d\n", RES.status, RES.use_memory);
 		delete_all(&RES);
 	}
+	*/
 	
-	/*
-	char* test[8] = {"OLE", "RE", "TLE", "MLE", "CE", "WA", "DSC", "AC"};
+	char* test[9] = {"OLE", "RE", "TLE", "MLE", "MLE(stack)", "CE", "WA", "DSC", "AC"};
 	char tmp[32];
-	for (int i = 0; i < 8; i++) {
+	for (int i = 0; i < 9; i++) {
 		strcpy(tmp, test[i]);
 		strcat(tmp, (char*)"/lll.cpp");
 		CFG.source_name = tmp;
@@ -33,7 +33,7 @@ int main() {
 		printf("\n\n");
 		delete_all(&RES);
 	}
-	*/
+	
 	/*
 	for (int i = 0; i < 30; i++) {
 		RES = run(CFG);

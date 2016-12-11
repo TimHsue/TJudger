@@ -174,6 +174,10 @@ Result run(Config *CFG) {
 
 	if (runner(&RCFG, &RRES) != 0) {
 		REPORTER("Run progream fail");
+		if (remove(file_name) != 0) {
+			REPORTER("Delete program fail");
+			return RES;
+		}
 		return RES;
 	}
 	if (remove(file_name) != 0) {
