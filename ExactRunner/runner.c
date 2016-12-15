@@ -35,7 +35,8 @@ int read_config(Config *CFG) {
 	fscanf(stream, "%d%d%d", &CFG -> time_limit, &CFG -> memory_limit, &cp_nums);
 	
 	CFG -> compile_option = (char **)malloc(sizeof(char*) * (cp_nums + 1));
-	for (int i = 0; i < cp_nums; i++) {
+	int i;
+	for (i = 0; i < cp_nums; i++) {
 		char tmp[200];
 		fscanf(stream, "%s", tmp);
 		CFG -> compile_option[i] = (char *)malloc((strlen(tmp) + 1)* sizeof(char));
@@ -68,7 +69,8 @@ void free_cfg(Config *CFG) {
 	if (CFG -> out_file != NULL) free(CFG -> out_file);
 	if (CFG -> ans_file != NULL) free(CFG -> ans_file);
 	if (CFG -> compile_option != NULL) {
-		for (int i = 0; CFG -> compile_option[i] != NULL; i++) {
+		int i;
+		for (i = 0; CFG -> compile_option[i] != NULL; i++) {
 			free(CFG -> compile_option[i]);
 		}
 		free(CFG -> compile_option);
