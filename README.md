@@ -3,6 +3,7 @@
 This is a Judger for onlinejudge and local test.  
 #Usage
 ##For Python:
+###Normal Edition:
 **Run ``sudo python setup.py install``**  
 It will help you install python-dev and libseccomp-dev which is in need for judger.  
 Import module:  
@@ -18,6 +19,7 @@ For instance:
 		'ans_file':'lll.ans', # answer file name
 		'time_limit':1000, # time limit(ms)
 		'memory_limit':64, # memory limit(MB)
+		'compile option':['-O2', '-lm', '-DONLINE_JUDGE'] # compile options
 	}
 Then you will get result from ``RES = TJudger.run(CFG)``.  
 The result is also a dict:
@@ -34,9 +36,21 @@ The result is also a dict:
 	}
 
 For details, check ``test/test.py``.  
+###Exact Edition:
+Because of ``fork()`` may lead to unreliable memory using in python when actual memory using is very small, using ``os.system("./runner")`` to run judger in a new program in Exact Edition does do better in memory using detection instead of running in same program by API.  
+In order to use Exact Edition:  
+**Run ``sudo python Exsetup.py install``**  
+**Then copy ``runner`` which is be compiled after Run ``sudo python Exsetup.py install`` to your judger root directory**  
+Import module:  
+**``import ExTJudger`` insead of ``import TJudger``**  
+You can get result from ``RES = ExTJudger.run(CFG) `` instead.  
+The other thing is the same as Normal Edition.  
+For details, check ``test/Extest.py`` ( there should also be a ``runner`` ) .
 ##For C/C++:
+###Normal Edition:
 **Check if you have installed ``libseccomp-dev``**  
 If not, you need to install it with``sudo apt-get install libseccomp-dev``.  
+**You should compile your juger source with ``-lseccomp``**  
 Header:  
 ``#include "xxxx/src/judger.c"``
 Then initialize Config and Result with:
@@ -46,7 +60,7 @@ Then initialize Config and Result with:
 	Result RES;
 Then run:  
 ``RES = run(&CFG)``  
-The result is a struct defined in ``src/judger.h``, you can visit all things in RES via:
+The result is a struct defined in ``src/judger.h``, you can view all things in RES by:
 
 	RES.score // the score program can get(top: 100)
 	RES.compile_info // if compile fail, it will show compile error message. Otherwise, it's empty.
@@ -58,7 +72,8 @@ The result is a struct defined in ``src/judger.h``, you can visit all things in 
 	RES.ans // answer detail
  
 For details, check ``test/test.c``.  
-
+###Exact Edition:
+**You should compile your juger source with ``-lseccomp`` and ``-DEXACT_MOD``**  
 ##Status details
 	System Error: Config is not correct
 	Judger Error: Judge system goes wrongly
@@ -77,8 +92,9 @@ For details, check ``test/test.c``.
 	Partly Correct: Special judger find that your answer is not completely wrong
 	
 
-( Special judge mod is untested. It will coming soon )  
-**( PyAPI may lead to unreliable memory using, I'm working to fix it. XD )**
+( Special judge mod is untested. It will be coming soon )  
+**( Normal Edition memory using is based on ru_minflt. That may lead to the memory using which is detected is bigger than which is actually used )**  
+**( Exact Edition memory using is based on ru_maxrss )**
 
 
 ##[Development Records](http://xtt.lcybox.com/wp-content/themes/XTT_A/article_tmp/sandbox.php)

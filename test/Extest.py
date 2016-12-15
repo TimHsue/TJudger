@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import os
-import TJudger
+import ExTJudger
 
 
 CFG = {
@@ -37,7 +37,7 @@ for item in a:
 	CFG['source_name'] = item + '/lll.cpp'
 	print item + " Config:"
 	print CFG
-	RES = TJudger.run(CFG)
+	RES = ExTJudger.run(CFG)
 	print item + " Result:"
 	print RES
 	print ""

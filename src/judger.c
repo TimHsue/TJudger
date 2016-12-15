@@ -29,7 +29,7 @@ int compile(const char *lan, char *file_name, char *out_name, char **compile_opt
 	generate_name(file_name, out_name);
 	sprintf(out_com, "-o%s", out_name);
 	
-	char **argv = (char **)malloc(sizeof(char*) * 32);
+	char **argv = (char **)malloc(sizeof(char*) * 10);
 	argv[0] = compiler;
 	argv[1] = file_name;
 	argv[2] = out_com;
