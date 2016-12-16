@@ -1,5 +1,4 @@
-# TJudger ( NowVersion 1.0 β )
----
+# TJudger ( NowVersion 1.0)
 This is a Judger for onlinejudge and local test.  
 #Usage
 ##For Python:
@@ -78,12 +77,12 @@ The result is a struct defined in ``src/judger.h``, you can view all things in R
 For details, check ``test/test.c``.  
 ###Exact Edition:
 **You should compile your juger source with ``-lseccomp`` and ``-DEXACT_MOD``**  
-##About Special Judge:
+#About Special Judge:
 The code in ``[]`` is in need for the judgement with special judger. And if you dont have special judger, you can ignore this option and leave it blank.  
 Special judger also runs in sandbox and have time/memory limit for system safety. You can change this option in ``src/judger.c``.  
 Your special judger should code with ``int main(int argc, char *argv[])``. Because main judger pass the message (in file content, out file content, ans file content) to special judger by argv in order (in = argv[0], out = argv[1], ans = argv[2]).  
 And your special judger should print the score that program can get in stdout. The score needs to be in the range of 0 ~ 100. Otherwise it may lead to judger error. Main judger will and only will read 8 characters in your special judger output and cut out by last num can get.
-##Status details
+#Status details
 	System Error: Config is not correct
 	Judger Error: Judge system goes wrongly
 	Accepted: Run successfully and get the correct output
