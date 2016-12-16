@@ -84,29 +84,51 @@ int get_result(Config *CFG, Result *RES) {
 		}
 		if (remove(file_name) != 0) {
 			REPORTER("Delete program fail");
+			if (remove(spj_tmp_out) != 0) {
+				REPORTER("Delete special judge out fail");
+				return -1;
+			}
 			return -1;
 		}
 		
 		if (RRES.judger_error != 0) {
 			strcpy(RES -> status, "Judger Error");
+			if (remove(spj_tmp_out) != 0) {
+				REPORTER("Delete special judge out fail");
+				return -1;
+			}
 			return 0;
 		} else if ((RRES.return_value | RRES.run_signal) != 0) {
+			REPORTER("Special Judger exit wrongly");
 			strcpy(RES -> status, "Run Special Judge Error");
+			if (remove(spj_tmp_out) != 0) {
+				REPORTER("Delete special judge out fail");
+				return -1;
+			}
 			return 0;
 		}
 		
 		if ((spj_res = READFILE(spj_tmp_out, 1024)) == NULL) {
 			REPORTER("Read special judge result file fail");
+			if (remove(spj_tmp_out) != 0) {
+				REPORTER("Delete special judge out fail");
+				return -1;
+			}
 			return -1;
 		}
-		
+		/*
+		if (remove(spj_tmp_out) != 0) {
+			REPORTER("Delete special judge out fail");
+			return -1;
+		}
+			*/
 		int score = 0;
 		int i;
 		for (i = 0; i < 7 && spj_res[i]; i++) {
 			if('0' <= spj_res[i] && spj_res[i] <= '9')
 				score = (score << 3) + (score << 1) + spj_res[i] - '0';
 		}
-		RES -> score = score;
+		RES -> score = score > 100 ? score % 100 : score;
 		if (score == 100) {
 			strcpy(RES -> status, "Accepted");
 		} else if (score == 0) {

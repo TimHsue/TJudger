@@ -21,6 +21,9 @@ def run(CFG):
 	cfg_stream.write(str(len(CFG['compile option'])) + '\n')
 	for options in CFG['compile option']:
 		cfg_stream.write(str(options) + '\n')
+	if 'special_judge' in CFG:
+		cfg_stream.write(str(CFG['special_judge']) + '\n')
+		cfg_stream.write(str(CFG['spj_language']) + '\n')
 	cfg_stream.close()
 	
 	if os.path.isfile("runner"):
