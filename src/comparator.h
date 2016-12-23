@@ -14,8 +14,8 @@ int compare(char*, char*);
 int ignore_space_linefeed(char* adj, char* ori, int size) {
 	int i;
 	for (i = 0; i < size; i++) {
-		if (ori[i] == '\n' || ori[i] == '\r') ori[i] = ' ';
-		adj[i] = ori[i];
+		if (ori[i] == '\n' || ori[i] == '\r') adj[i] = ' ';
+		else adj[i] = ori[i];
 	}
 	adj[size++] = ' ';
 	int resize = 0;
