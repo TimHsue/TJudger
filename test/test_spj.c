@@ -8,8 +8,9 @@ int main() {
 	char* argv[] = {NULL};
 	Config CFG = {"C++", "MLE/lll.cpp", "lll.in", "lll.out", "lll.ans", 1000, 128, argv, "spj.cpp", "C++"};
 	Result RES;
+	int i;
 	/*
-	for (int i = 0; i < 1; i++) {
+	for (i = 0; i < 1; i++) {
 		RES = run(&CFG);
 		printf("status: %s memory: %d\n", RES.status, RES.use_memory);
 		delete_all(&RES);
@@ -18,7 +19,7 @@ int main() {
 	
 	char* test[9] = {"AC", "OLE", "RE", "TLE", "MLE", "MLE(stack)", "CE", "WA", "DSC"};
 	char tmp[32];
-	for (int i = 0; i < 1; i++) {
+	for (i = 0; i < 1; i++) {
 		strcpy(tmp, test[i]);
 		strcat(tmp, (char*)"/lll.cpp");
 		CFG.source_name = tmp;
@@ -35,7 +36,7 @@ int main() {
 	}
 	
 	/*
-	for (int i = 0; i < 30; i++) {
+	for (i = 0; i < 30; i++) {
 		RES = run(CFG);
 		// printf("memory: %d\n", RES.use_memory);
 		printf("time: %d memory: %d\n", RES.use_time, RES.use_memory);

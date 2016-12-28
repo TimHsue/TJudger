@@ -236,6 +236,14 @@ Result run(Config *CFG) {
 		}
 	} else if (RRES.run_signal == 25) {
 		strcpy(status, "Output Limit Exceed");
+	} else {
+		if (RRES.use_time > CFG -> time_limit) {
+			strcpy(status, "Time Limit Exceed");
+		} else if (RRES.use_memory > CFG -> memory_limit * 1024) {
+			strcpy(status, "Memory Limit Exceed");
+		} else {
+			strcpy(status, "Runtime Error");
+		}
 	}
 	RES.status = status;
 	
