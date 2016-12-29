@@ -1,5 +1,5 @@
 # TJudger ( NowVersion 1.0)
-This is a Judger for onlinejudge and local test.  
+TJudger is a judger designed for online judge system, which is also available for local test purpose.
 #Usage
 ##For Python:
 ###Normal Edition:
@@ -58,7 +58,7 @@ Then initialize Config and Result with:
 
 	char* argv[] = {"xxx", "xxx", ...};
 	Config CFG = {
-		language, soure file name, in file name, out filename, ans file name, 
+		language, soure file name, in file name, out filename, ans file name,
 		time limit(ms), memery limit(MiB), argv[, special judger name][, special judger language]};
 	Result RES;
 Then run:  
@@ -73,37 +73,36 @@ The result is a struct defined in ``src/judger.h``, you can view all things in R
 	RES.in // input detail
 	RES.out // output detail
 	RES.ans // answer detail
- 
+
 For details, check ``test/test.c``.  
 ###Exact Edition:
 **You should compile your juger source with ``-lseccomp`` and ``-DEXACT_MOD``**  
 #About Special Judge:
-The code in ``[]`` is in need for the judgement with special judger. And if you dont have special judger, you can ignore this option and leave it blank.  
-Special judger also runs in sandbox and have time/memory limit for system safety. You can change this option in ``src/judger.c``.  
-Your special judger should code with ``int main(int argc, char *argv[])``. Because main judger pass the message (in file content, out file content, ans file content) to special judger by argv in order (in = argv[0], out = argv[1], ans = argv[2]).  
-And your special judger should print the score that program can get in stdout. The score needs to be in the range of 0 ~ 100. Otherwise it may lead to judger error. Main judger will and only will read 8 characters in your special judger output and cut out by last num can get.
+The code in ``[]`` is in need for the judgement with special judger. Just leave it blank if there is no special judge.
+Special judger also runs in sandbox and have time/memory limit for system safety. You can tweak this in ``src/judger.c``.  
+The main function of the special judger should be declared like ``int main(int argc, char *argv[])``.Because the main judger passes the file content to special judger by `argv` in order (in = argv[0], out = argv[1], ans = argv[2]).  
+Your special judger should print the score of the candidate in `stdout`. The score should be in the range of 0 ~ 100. Otherwise it may lead to judger error. The main judger will only read the first 8 characters from the output of your special judger and cut out by last num can get.
 #Status details
-	System Error: Config is not correct
-	Judger Error: Judge system goes wrongly
-	Accepted: Run successfully and get the correct output
-	Wrong Answer: Run successfully but get the wrong output
-	Dangerous System Call: The program is killed because of runing with dangerous system call
-	Runing Error: The program is killed because of error like segmentfault
-	Compile Error: Your program sourse cannot be compiled correctly
-	Time Limit Exceed: The Time your program costs is too large
-	Memory Limit Exceed: The memory your program costs is too large
-	Output Limit Exceed: The output of your program is too large
+	System Error: Invalid configuration
+	Judger Error: Internal Judger error
+	Accepted: The program has exited successfully and passed all tests.
+	Wrong Answer: The program has exited successfully but printed the wrong output.
+	Dangerous System Call: The program has been killed because of invoking dangerous system call.
+	Runtime Error: The program has been killed because of errors like Segment Fault.
+	Compile Error: The source can't be compiled correctly.
+	Time Limit Exceed: The Time your program costs is too large.
+	Memory Limit Exceed: The memory your program costs is too large.
+	Output Limit Exceed: The output of your program is too large.
 	Run Successfully: Run successfully but something goes wrong....
 	with spj:
-	Compile Special Judge Error: Your special judge source cannot be compiled correctly
-	Run Special Judge Error: Your speical judger gose wrongly
-	Partly Correct: Special judger find that your answer is not completely wrong
-	
+	Compile Special Judge Error: The source of your special judger can't be compiled correctly.
+	Run Special Judge Error: The special judger exited with errors.
+	Partly Correct: The special judger has found that the output of the program is not completely correct.
 
-( Special judge mod is untested. It will be coming soon )  
+
+( Special judge mod has NOT been tested. It will be coming soon )  
 **( Normal Edition memory using is based on ru_minflt. That may lead to the memory using which is detected is bigger than which is actually used )**  
 **( Exact Edition memory using is based on ru_maxrss )**
 
 
 ##[Development Records](http://xtt.lcybox.com/wp-content/themes/XTT_A/article_tmp/sandbox.php)
-
