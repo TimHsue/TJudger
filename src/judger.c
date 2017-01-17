@@ -227,6 +227,8 @@ Result run(Config *CFG) {
 	} else if (RRES.run_signal == 9) {
 		if (RRES.use_time > CFG -> time_limit) {
 			strcpy(status, "Time Limit Exceed");
+		} else {
+			strcpy(status, "Runtime Error");
 		}
 	} else if (RRES.run_signal == 11) {
 		if (RRES.use_memory > CFG -> memory_limit * 1024) {
